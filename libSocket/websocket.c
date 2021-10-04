@@ -84,10 +84,11 @@ char *encodeWS(struct websock_packet packetData) {
 	// ok now on to the thingy
 	// must make a random mask!
 	// then aalso maask dataa.
-	bytes[2] = rand() & 0xFF;
-	bytes[3] = rand() & 0xFF;
-	bytes[4] = rand() & 0xFF;
-	bytes[5] = rand() & 0xFF;
+     int rdm = rand();
+	bytes[2] = rdm & 0xFF;
+	bytes[3] = (rdm >> 8) & 0xFF;
+	bytes[4] = (rdm >> 2) & 0xFF;
+	bytes[5] = (rdm >> 3) & 0xFF; // very random!
 	for (uint8_t i=0; i<=packetData.len-1; i++) {
 		if (packetData.data[i] != 0) { //websocket data doesn't mask the null-terminator.
 			bytes[i+6]=packetData.data[i] ^ (uint8_t)(bytes[(i % 4)+2]);
