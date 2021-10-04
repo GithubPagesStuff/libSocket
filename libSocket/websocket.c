@@ -41,7 +41,7 @@ struct websock_packet decodeWS(char *bytes) { // PLEASE null-terminate the bytes
 		startAt = 10; //
 		len = lenb;
 	}
-	char decoded[256]; // pls free it btw.
+	char *decoded=malloc(256); // pls free it btw.
 	if (isMasked) {
 		startAt = startAt + 4;
 		uint32_t maskKey = bytes[2];
@@ -57,6 +57,7 @@ struct websock_packet decodeWS(char *bytes) { // PLEASE null-terminate the bytes
 	decoded[(strlen(bytes)-startAt)]=0x00;//null term
 	struct websock_packet returnValue;
 	returnValue.data=strdup(decoded);
+    free(decoded);
 	returnValue.fin=fin;
 	returnValue.isMasked=isMasked;
 	returnValue.len=len;
@@ -68,7 +69,7 @@ struct websock_packet decodeWS(char *bytes) { // PLEASE null-terminate the bytes
 char *encodeWS(struct websock_packet packetData) {
 	// OK im gonna assume this is text data, for now - actually no. i'll make the packet... :|
 	packetData.len = strlen(packetData.data);
-	char bytes[16+strlen(packetData.data)];
+	char bytes[16+packetData.len];
 	// ok time to compress these into a single byte!
 	uint8_t byte1 = 0;
 	byte1 |= packetData.fin << 7;
@@ -87,12 +88,12 @@ char *encodeWS(struct websock_packet packetData) {
 	bytes[3] = rand() & 0xFF;
 	bytes[4] = rand() & 0xFF;
 	bytes[5] = rand() & 0xFF;
-	for (uint8_t i=0; i<=strlen(packetData.data)-1; i++) {
+	for (uint8_t i=0; i<=packetData.len-1; i++) {
 		if (packetData.data[i] != 0) { //websocket data doesn't mask the null-terminator.
 			bytes[i+6]=packetData.data[i] ^ (uint8_t)(bytes[(i % 4)+2]);
 		}
 	}
-	bytes[6+strlen(packetData.data)]=0; // null-terminate it
+	bytes[6+packetData.len]=0; // null-terminate it
 	return strdup(bytes);
 }
 
@@ -134,6 +135,8 @@ void *wscon(void *argptr) {
 				char *currentBuffer=malloc(1024);
 // ok this will check for a response.
 				byten = read(socketfd,currentBuffer, 1024);
+			    connection->dataBuffer = strdup(currentBuffer);
+			    free(currentBuffer);
 				write(STDOUT_FILENO, currentBuffer, byten);
 			    queue[0].opcode=122;
 			}
@@ -168,7 +171,7 @@ struct websocket *start_connection(char *ipaddr, uint8_t isSecure, char* host, i
 	s_in.sin_family = AF_INET;
 	s_in.sin_port = htons(port);
 	struct timeval timeout;
-	timeout.tv_sec=1;
+	timeout.tv_sec=10;
 	timeout.tv_usec=0;
 	struct in_addr iiadrn;
 	iiadrn.s_addr=connection.ipaddr;
@@ -205,7 +208,9 @@ struct websocket *start_connection(char *ipaddr, uint8_t isSecure, char* host, i
 		}
 	}
 	byten = read(socketfd,buffer, 1024);
+    free(handshake);
 	write(STDOUT_FILENO, buffer, byten);
+    free(buffer);
 	byten=0;
 	struct websock_packet initReq;
 	initReq.data = "{\"id\": 1, \"method\": \"Page.reload\"}";

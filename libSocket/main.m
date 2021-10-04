@@ -18,9 +18,9 @@ int main(int argc, const char * argv[]) {
 	defaultPacket.opcode=1;
 	defaultPacket.data="{}";
 //	printf(decodeWS(encodeWS(defaultPacket)).data);
-	struct websocket *connection = (start_connection("127.0.0.1", 0, "127.0.0.1", 9222, "/devtools/page/01DFD055B9B804DF2C283E157653FE13"));
+	struct websocket *connection = (start_connection("127.0.0.1", 0, "127.0.0.1", 9222, "/devtools/page/867B88D0A1CB742AC967021943A57881"));
 	while (0==0) {
-		char input[256];
+		char *input=malloc(256);
 
 		//gets(input);
 //		printf(input);
@@ -34,6 +34,7 @@ int main(int argc, const char * argv[]) {
 		initReq.len=strlen(initReq.data)-1;
 		connection->queue[0]=initReq;
 		sleep(0.1);
+		free(input);
 	}
 	
 	

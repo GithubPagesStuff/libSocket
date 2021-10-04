@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DF4F8E5E27089E2400D3101F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DF4F8E5D27089E2400D3101F /* main.m */; };
+		DF4F8E6627089ECC00D3101F /* websocket.c in Sources */ = {isa = PBXBuildFile; fileRef = DF4F8E6427089ECC00D3101F /* websocket.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		DF4F8E5A27089E2400D3101F /* libSocket */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = libSocket; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF4F8E5D27089E2400D3101F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		DF4F8E6427089ECC00D3101F /* websocket.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = websocket.c; sourceTree = "<group>"; tabWidth = 5; };
+		DF4F8E6527089ECC00D3101F /* websocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = websocket.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +60,8 @@
 		DF4F8E5C27089E2400D3101F /* libSocket */ = {
 			isa = PBXGroup;
 			children = (
+				DF4F8E6427089ECC00D3101F /* websocket.c */,
+				DF4F8E6527089ECC00D3101F /* websocket.h */,
 				DF4F8E5D27089E2400D3101F /* main.m */,
 			);
 			path = libSocket;
@@ -119,6 +124,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF4F8E5E27089E2400D3101F /* main.m in Sources */,
+				DF4F8E6627089ECC00D3101F /* websocket.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
